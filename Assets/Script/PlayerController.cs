@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 1.0f;
-    public float jumpSpeed = 5.0f;
+    public float jumpSpeed = 3.0f;
     public SpriteRenderer upRender;
     public SpriteRenderer downRender;
     public Sprite[] idleLoopSpriteUp;
@@ -21,28 +21,38 @@ public class PlayerController : MonoBehaviour
     public Sprite[] normalShootSprite;
     public Sprite[] upShootSprite;
     public Sprite[] downShootSprite;
+    public Sprite[] upThrowSprite;
+    public Sprite[] downThrowSprite;
+    public Sprite[] upHitSprite;
+    public Sprite[] downHitSprite;
     public GameObject handgunBullet;
-    public GameObject handgunBulletFire;
+    public GameObject grenade;
     public GameObject normalShootPos;
     public GameObject upShootPos;
     public GameObject downShootPos;
     public Camera cam;
 
     private bool lookUp = false;
-    private bool shoot = false;
+    private bool isShoot = false;
+    private bool isThrow = false;
     private int idleLoopIndex = 0;
     private int walkLoopIndex = 0;
     private int downLoopIndex = 0;
     private int jumpLoopIndex = 0;
     private int lookUpIndex = 0;
     private int shootIndex = 0;
+    private int throwIndex = 0;
+    private int hitIndex = 0;
     private float idleLoopInterval = 1.0f / 5;
     private float walkLoopInterval = 1.0f / 10;
     private float downLoopInterval = 1.0f / 5;
-    private float jumpLoopInterval = 1.0f / 5;
+    private float jumpLoopInterval = 1.0f / 20;
 
     private float lookUpInterval = 1.0f / 5;
     private float shootInterval = 1.0f / 50;
+    private float throwInterval = 1.0f / 25;
+    private float hitInterval = 1.0f / 25;
+    private bool hitFlag = false;
 
     private float timeCount;
     private float additionalTimeCount;
@@ -90,10 +100,15 @@ public class PlayerController : MonoBehaviour
         bool key_k = Input.GetKey("k");
         bool key_s = Input.GetKey("s");
         bool key_w = Input.GetKey("w");
+        bool key_l = Input.GetKey("l");
         lookUp = key_w;
-        if(!shoot)
+        if(!isShoot)
         {
-            shoot = key_j;
+            isShoot = key_j;
+        }
+        if (!isThrow)
+        {
+            isThrow = key_l;
         }
         
         if(! lookUp) lookUpIndex = 0;
@@ -190,11 +205,70 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         additionalTimeCount += Time.deltaTime;
-        if (shoot)
+        if (isThrow)
+        {
+            Vector3 pos;
+            if (m_state == States._down || m_state == States._down_walk)
+            {
+                pos = downShootPos.transform.position;
+                upRender.sprite = downThrowSprite[throwIndex];
+            }
+            else
+            {
+                pos = normalShootPos.transform.position;
+                upRender.sprite = upThrowSprite[throwIndex];
+            }
+            if (additionalTimeCount < throwInterval) return;
+            additionalTimeCount = 0;
+
+            if (throwIndex == 1)
+            {
+                GameObject.Instantiate(grenade, pos, Quaternion.Euler(0, 0, 0));
+            }
+            throwIndex++;
+
+            if (throwIndex >= upThrowSprite.Length)
+            {
+                throwIndex = 0;
+                isThrow = false;
+                timeCount = 1;
+            }
+        }
+        else if(isShoot && hitFlag)
+        {
+            if (m_state == States._down || m_state == States._down_walk)
+            {
+                upRender.sprite = downHitSprite[hitIndex];
+            }
+            else
+            {
+                upRender.sprite = upHitSprite[hitIndex];
+            }
+            if (additionalTimeCount < hitInterval) return;
+            additionalTimeCount = 0;
+
+            if (hitIndex == 1)
+            {
+                //GameObject.Instantiate(handgunBullet, pos, Quaternion.Euler(0, 0, z_rotation));
+            }
+            hitIndex++;
+
+            if (hitIndex >= upHitSprite.Length)
+            {
+                hitIndex = 0;
+                isShoot = false;
+                timeCount = 1;
+            }
+        }
+        else if (isShoot)
         {
             float z_rotation = 0f;
+            if(transform.localScale.x == 1)
+            {
+                z_rotation = 180f;
+            }
             Vector3 pos;
-            if (lookUp)
+            if (lookUp && m_state != States._down && m_state != States._down_walk)
             {
                 z_rotation = 90f;
                 pos = upShootPos.transform.position;
@@ -216,14 +290,14 @@ public class PlayerController : MonoBehaviour
             if (shootIndex == 1)
             {
                 GameObject.Instantiate(handgunBullet, pos, Quaternion.Euler(0, 0, z_rotation));
-                GameObject.Instantiate(handgunBulletFire, pos, Quaternion.Euler(0, 0, z_rotation));
             }
             shootIndex++;
             
             if (shootIndex >= upShootSprite.Length) 
             {
                 shootIndex = 0;
-                shoot = false; 
+                isShoot = false;
+                timeCount = 1;
             }
         }
         else if (lookUp && m_state != States._down && m_state != States._down_walk)
@@ -259,6 +333,25 @@ public class PlayerController : MonoBehaviour
             downLoopIndex = 0;
             walkLoopIndex = 0;
             jumpLoopIndex = 0;
+            timeCount = 1;
         }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if(collision.name == "Grenade")
+        {
+            hitFlag = true;
+        }
+        
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.name == "Grenade")
+        {
+            hitFlag = false;
+        }
+        
     }
 }

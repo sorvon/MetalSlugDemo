@@ -7,15 +7,46 @@ public class Bullet : MonoBehaviour
     public float speed = 5.0f;
     public float lifeTime = 3.0f;
     public int damage = 1;
+    public Sprite[] bulletSprite;
+    private float bulletInterval = 1.0f / 20;
+    private int bulletIndex = 0;
+    private float timeCount = 0;
+
+    public GameObject fireSprite;
+    public GameObject endSprite;
+    private GameObject fireSpriteTmp;
     // Start is called before the first frame update
     void Start()
     {
+        fireSpriteTmp = GameObject.Instantiate(fireSprite, transform.position, transform.rotation);
         Destroy(gameObject, lifeTime);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.right * speed * Time.deltaTime);
+        if (!fireSpriteTmp)
+        {
+            timeCount += Time.deltaTime;
+            GetComponent<SpriteRenderer>().sprite = bulletSprite[bulletIndex];
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
+            if (timeCount > bulletInterval)
+            {
+                timeCount = 0;
+                if(bulletIndex < bulletSprite.Length - 1) bulletIndex++;
+            }
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().sprite = null;
+        }
+            
+    }
+
+
+    private void OnDestroy()
+    {
+        GameObject.Instantiate(endSprite, transform.position, transform.rotation);
     }
 }
