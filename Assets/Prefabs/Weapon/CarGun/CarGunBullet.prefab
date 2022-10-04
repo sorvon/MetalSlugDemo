@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 4821168258359087407}
   - component: {fileID: 4821168258359087404}
   - component: {fileID: 4821168258359087405}
-  - component: {fileID: 5733191023694250521}
+  - component: {fileID: -884366292424558928}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: CarGunBullet
   m_TagString: PlayerBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,7 +45,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -101,7 +101,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 36
+  m_SortingOrder: 101
   m_Sprite: {fileID: 21300000, guid: de2514d2027dade4faa781f85c029b74, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -127,14 +127,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   lifeTime: 3
-  damage: 1
+  damage: 2
   bulletSprite:
   - {fileID: 21300000, guid: b141f6849ce5113449ddb8280e84850d, type: 3}
   - {fileID: 21300000, guid: d13c264c931c5ab4baaf7a95fb89bbec, type: 3}
   - {fileID: 21300000, guid: de2514d2027dade4faa781f85c029b74, type: 3}
-  fireSprite: {fileID: 6276575603275851145, guid: 24d69eed0da53a64abb6e76c1b9b0633, type: 3}
+  fireSprite: {fileID: 6276575603275851145, guid: fbe4ff73a43723947948e2268e93e095, type: 3}
   endSprite: {fileID: 5192713951418755979, guid: 5280a10fd30cfc349b96070dd1677df6, type: 3}
---- !u!50 &5733191023694250521
+--- !u!50 &-884366292424558928
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0

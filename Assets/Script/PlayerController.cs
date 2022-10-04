@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 1.0f;
     public float jumpSpeed = 3.0f;
+    public float invincibleTime = 3;
     public SpriteRenderer upRender;
     public SpriteRenderer downRender;
     public Sprite[] idleLoopSpriteUp;
@@ -30,7 +31,8 @@ public class PlayerController : MonoBehaviour
     public GameObject normalShootPos;
     public GameObject upShootPos;
     public GameObject downShootPos;
-    public Camera cam;
+    public GameObject deadAmime;
+    public bool inputFlag = true;
 
     private bool lookUp = false;
     private bool isShoot = false;
@@ -55,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private bool hitFlag = false;
 
     private float timeCount;
+    
+    private bool isTransparent = false;
     private float additionalTimeCount;
 
 
@@ -83,24 +87,12 @@ public class PlayerController : MonoBehaviour
     void tickLogic()
     {
         float h = Input.GetAxisRaw("Horizontal");
-        //Debug.Log(h);
-        if (h < 0)
-        {
-            transform.transform.localScale = new Vector3(1, 1, 1);
-        }
-        else if(h > 0)
-        {
-            transform.transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else
-        {
-            walkLoopIndex = 0; 
-        }
-        bool key_j = Input.GetKey("j");
-        bool key_k = Input.GetKey("k");
-        bool key_s = Input.GetKey("s");
-        bool key_w = Input.GetKey("w");
-        bool key_l = Input.GetKey("l");
+       
+        bool key_j = Input.GetKey("j") && inputFlag;
+        bool key_k = Input.GetKey("k") && inputFlag;
+        bool key_s = Input.GetKey("s") && inputFlag;
+        bool key_w = Input.GetKey("w") && inputFlag;
+        bool key_l = Input.GetKey("l") && inputFlag;
         lookUp = key_w;
         if(!isShoot)
         {
@@ -113,16 +105,24 @@ public class PlayerController : MonoBehaviour
         
         if(! lookUp) lookUpIndex = 0;
         Vector2 v = GetComponent<Rigidbody2D>().velocity;
-        v.x = speed * h;
+        if(inputFlag) v.x = speed * h;
+        if (v.x < 0)
+        {
+            transform.transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (v.x > 0)
+        {
+            transform.transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else
+        {
+            walkLoopIndex = 0;
+        }
         if (key_k && m_state != States._jump)
         {
             v.y = jumpSpeed;
         }
-        
-        if (cam.transform.transform.position.x < transform.position.x)
-        {
-            cam.transform.transform.position = new Vector3(transform.position.x, cam.transform.transform.position.y, cam.transform.transform.position.z);
-        }
+
         
         if (Mathf.Abs(v.y) > 0.05)
         {
@@ -154,7 +154,13 @@ public class PlayerController : MonoBehaviour
     void tickRender()
     {
         timeCount += Time.deltaTime;
-        
+        if (invincibleTime > 0)
+        {
+            invincibleTime -= Time.deltaTime;
+            if (isTransparent) Invoke("setUntransparent", 0.2f);
+            else Invoke("setTransparent", 0.2f);
+        }
+        else setUntransparent();
         setPositton();
         switch (m_state)
         {
@@ -223,7 +229,11 @@ public class PlayerController : MonoBehaviour
 
             if (throwIndex == 1)
             {
-                GameObject.Instantiate(grenade, pos, Quaternion.Euler(0, 0, 0));
+                GameObject tmp =  GameObject.Instantiate(grenade, pos, Quaternion.Euler(0, 0, 0));
+                if(transform.localScale.x == 1)
+                {
+                    tmp.GetComponent<Grenade>().speed.x *= -1;
+                }
             }
             throwIndex++;
 
@@ -315,12 +325,12 @@ public class PlayerController : MonoBehaviour
         switch (m_state)
         {
             case States._down:
-                GetComponent<BoxCollider2D>().offset = new Vector2(-0.06f, 0.11f);
-                GetComponent<BoxCollider2D>().size = new Vector2(0.65f, 0.55f);
+                GetComponent<BoxCollider2D>().offset = new Vector2(-0.06f, 0.08f);
+                GetComponent<BoxCollider2D>().size = new Vector2(0.38f, 0.45f);
                 break;
             default:
-                GetComponent<BoxCollider2D>().offset = new Vector2(-0.06f, 0.2f);
-                GetComponent<BoxCollider2D>().size = new Vector2(0.65f, 0.74f);
+                GetComponent<BoxCollider2D>().offset = new Vector2(-0.06f, 0.23f);
+                GetComponent<BoxCollider2D>().size = new Vector2(0.38f, 0.74f);
                 break;
         }
     }
@@ -337,21 +347,58 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void playerDead()
+    {
+        if (invincibleTime > 0) return;
+        Debug.Log("dead");
+        GameObject.Instantiate(deadAmime, transform.position, Quaternion.identity);
+        Invoke("reborn", 2);
+        gameObject.SetActive(false);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("EnemyBullet"))
+        {
+            //if (invincibleTime > 0) return;
+            playerDead();
+            Destroy(collision.gameObject);
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.name == "Grenade")
+        if(collision.name == "Enemy")
         {
             hitFlag = true;
         }
-        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.name == "Grenade")
+        if (collision.name == "Enemy")
         {
             hitFlag = false;
         }
-        
+    }
+
+    void reborn()
+    {
+        gameObject.SetActive(true);
+        invincibleTime = 5;
+        Camera cam = Camera.main;
+        transform.position = cam.ViewportToWorldPoint(new Vector3(0.3f, 0.7f, 10));
+    }
+    void setTransparent()
+    {
+        upRender.color = new Color(1, 1, 1, 0.5f);
+        downRender.color = new Color(1, 1, 1, 0.5f);
+        isTransparent = true;
+    }
+    void setUntransparent()
+    {
+        upRender.color = new Color(1, 1, 1, 1);
+        downRender.color = new Color(1, 1, 1, 1);
+        isTransparent = false;
     }
 }

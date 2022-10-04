@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class BackgroundLoop : MonoBehaviour
 {
-    public float BGSpeed;//设置背景速度
+    public float BGSpeed = 1;//设置背景速度
     private Material BGMaterial;
-    private bool startLoop = false;
+    public bool startLoop = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +16,11 @@ public class BackgroundLoop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.BGMaterial.mainTextureOffset = new Vector2(BGSpeed * Time.time, 0);
+        if (startLoop) 
+        {
+            this.BGMaterial.mainTextureOffset = new Vector2(BGSpeed * Time.time, 0);
+        }
+        
     }
 
     public void setStartLoop(bool value)

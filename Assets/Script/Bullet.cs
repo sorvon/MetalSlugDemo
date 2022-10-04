@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviour
     public float lifeTime = 3.0f;
     public int damage = 1;
     public Sprite[] bulletSprite;
+    public bool isLoop = false;
+    
     private float bulletInterval = 1.0f / 20;
     private int bulletIndex = 0;
     private float timeCount = 0;
@@ -33,7 +35,9 @@ public class Bullet : MonoBehaviour
             if (timeCount > bulletInterval)
             {
                 timeCount = 0;
-                if(bulletIndex < bulletSprite.Length - 1) bulletIndex++;
+                if (bulletIndex < bulletSprite.Length - 1) bulletIndex++;
+                else if (isLoop) bulletIndex = 0;
+
             }
             transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
