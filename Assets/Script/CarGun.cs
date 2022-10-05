@@ -14,6 +14,7 @@ public class CarGun : MonoBehaviour
     public float shootInterval = 0.1f;
     private int carGunIndex = 0;
     private bool isCarGun = false;
+    private bool isTransparent = false;
     private Vector3[] positionList =
     {
         new Vector3(-1.45f, 0.2f, 0),
@@ -59,15 +60,24 @@ public class CarGun : MonoBehaviour
             isCarGun = false;
             player.SetActive(true);
             return;
-        } 
-
+        }
         
         timeCount += Time.deltaTime;
-        if(timeCount > rotateInterval)
+        if (playerController.invincibleTime > 0)
+        {
+            playerController.invincibleTime -= Time.deltaTime;
+            if (isTransparent) Invoke("setUntransparent", 0.2f);
+            else Invoke("setTransparent", 0.2f);
+        }
+        else
+        {
+            setUntransparent();
+        }
+        if (timeCount > rotateInterval)
         {
             timeCount = 0;
-            if (Input.GetKey("d")) setCarGunIndex(carGunIndex + 1);
-            else if (Input.GetKey("a")) setCarGunIndex(carGunIndex - 1);
+            if (Input.GetKey("a")) setCarGunIndex(carGunIndex + 1);
+            else if (Input.GetKey("d")) setCarGunIndex(carGunIndex - 1);
         }
         carGunRender.sprite = carGunSprite[Mathf.Abs(carGunIndex)];
         GetComponent<SpriteRenderer>().sprite = playerSprite[Mathf.Abs(carGunIndex)];
@@ -113,11 +123,37 @@ public class CarGun : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.name == "CarGunRange" && player.GetComponent<Rigidbody2D>().velocity.y < -0.5)
+        if (isCarGun)
+        {
+            if (collision.CompareTag("EnemyBullet"))
+            {
+                if(playerController.invincibleTime > 0) return;
+                GetComponent<SpriteRenderer>().sprite = null;
+                isCarGun = false;
+                player.SetActive(true);
+            }
+        }
+        else if (collision.name == "CarGunRange" && player.GetComponent<Rigidbody2D>().velocity.y < -0.5)
         {
             isCarGun = true;
             player.SetActive(false);
         }
-        
+                
+    }
+
+    private void OnDestroy()
+    {
+        player.SetActive(true);
+    }
+
+    void setTransparent()
+    {
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+        isTransparent = true;
+    }
+    void setUntransparent()
+    {
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
+        isTransparent = false;
     }
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6276575603275851145
+--- !u!1 &2218203679941300455
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3117624139388674294}
-  - component: {fileID: 822207312140612216}
-  - component: {fileID: 4376839399781990}
+  - component: {fileID: 1296611281171262798}
+  - component: {fileID: 8235561285982546781}
+  - component: {fileID: 8216318964803758530}
   m_Layer: 0
-  m_Name: CarGunFire
+  m_Name: VehicleDead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3117624139388674294
+--- !u!4 &1296611281171262798
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6276575603275851145}
+  m_GameObject: {fileID: 2218203679941300455}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &822207312140612216
+--- !u!212 &8235561285982546781
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6276575603275851145}
+  m_GameObject: {fileID: 2218203679941300455}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -73,32 +73,48 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 101
-  m_Sprite: {fileID: 21300000, guid: 0ae08289240eb9b48a542684a6be7d15, type: 3}
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 774ec27514edcf94f820205117aaee75, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.23, y: 0.18}
+  m_Size: {x: 0.49, y: 0.38}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4376839399781990
+--- !u!114 &8216318964803758530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6276575603275851145}
+  m_GameObject: {fileID: 2218203679941300455}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02b27fea0d756714080582206776dde9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sprite:
-  - {fileID: 21300000, guid: 0ae08289240eb9b48a542684a6be7d15, type: 3}
-  - {fileID: 21300000, guid: d7ef7939e8f40184ca98ebd2cc3608e9, type: 3}
-  - {fileID: 21300000, guid: 6ee9071dddae4b149b3538f2db0590fc, type: 3}
+  - {fileID: 21300000, guid: 774ec27514edcf94f820205117aaee75, type: 3}
+  - {fileID: 21300000, guid: 200580f5385184f489366be96627bfaa, type: 3}
+  - {fileID: 21300000, guid: 9306f99916be59d43b11e25a0cca33ea, type: 3}
+  - {fileID: 21300000, guid: e94d47551e7895544b80286dc1f751cc, type: 3}
+  - {fileID: 21300000, guid: 66f540d03b15b4c4b8ae8b24d0a8889f, type: 3}
+  - {fileID: 21300000, guid: 09177f567c281fa46a9b43e9a6242306, type: 3}
+  - {fileID: 21300000, guid: ec58aa30495066d4b995f2146926bd62, type: 3}
+  - {fileID: 21300000, guid: 6b21f574b5545384ca1056af681848c5, type: 3}
+  - {fileID: 21300000, guid: 788ca2c1b35d4354aa517d68f76a4dca, type: 3}
+  - {fileID: 21300000, guid: 4be8865118b39e140b193ee6fedc4934, type: 3}
+  - {fileID: 21300000, guid: 1a6a2f93ddc8dea419760fd245fde725, type: 3}
+  - {fileID: 21300000, guid: ba2bee27bd29a1f45925a37eed16ae82, type: 3}
+  - {fileID: 21300000, guid: ba8376f4ef39eba459913a9acd1c2d49, type: 3}
+  - {fileID: 21300000, guid: 7fa5ec2b376f0904c85b69fe99a2ab1c, type: 3}
+  - {fileID: 21300000, guid: 0d0a8c954f10c7f479a81387d8a7cf7d, type: 3}
+  - {fileID: 21300000, guid: bde0897f1a1587d43979c2c9a0f20069, type: 3}
+  - {fileID: 21300000, guid: 7b96257b5aa106342ad540dd1e4f55e0, type: 3}
+  - {fileID: 21300000, guid: d4037c386d859364eb8790eb138214bc, type: 3}
+  - {fileID: 21300000, guid: 6ef2a55de43f9f54d9fd8c78a5b6d3e0, type: 3}
   spriteInterval: 0.05

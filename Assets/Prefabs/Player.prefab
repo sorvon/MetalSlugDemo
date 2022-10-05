@@ -343,7 +343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  jumpSpeed: 5
+  jumpSpeed: 4
   invincibleTime: 3
   upRender: {fileID: 5823964074015817313}
   downRender: {fileID: 5823964073178888645}

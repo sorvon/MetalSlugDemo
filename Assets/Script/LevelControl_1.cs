@@ -10,30 +10,86 @@ public class LevelControl_1 : MonoBehaviour
     public Camera mainCamera;
     public GameObject BGLoop;
     public int life = 10;
+    public GameObject enemy;
+    public GameObject randomEnemy;
+    public GameObject boss;
+    public GameObject bossBomb;
 
     private PlayerController playerController;
     private float timeCount = 0;
     private bool[] jumpFlag = { true, true };
     private bool invokeFlag = true;
-
+    private bool isStop = false;
+    private int level = 1;
+    private Vector3 playerPos;
+    private bool isCameraFollow = false;
     // Start is called before the first frame update
     void Start()
     {
-        playerController = player.GetComponent<PlayerController>();
-        playerController.inputFlag = false;
+        Transform enemyList = enemy.GetComponentInChildren<Transform>();
+        foreach (Transform enemy in enemyList)
+        {
+            enemy.gameObject.SetActive(false);
+            enemy.gameObject.GetComponent<Enemy>().player = player;
+            if (level == 1) StartCoroutine(awakeEnemy(enemy.gameObject));
+        }
+        if (level == 1)
+        {
+            randomEnemy.GetComponent<Enemy>().player = player;
+            InvokeRepeating("genRandomEnemy", 6, 5);
+            playerController = player.GetComponent<PlayerController>();
+            playerController.inputFlag = false;
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown("space"))
+        {
+            isStop = !isStop;
+            Debug.Log(isStop);
+            if (isStop) Time.timeScale = 0;
+            else Time.timeScale = 1;
+        }
         timeCount += Time.deltaTime;
+        switch (level)
+        {
+            case 1: tickLevel_1(); break;
+            case 2: tickLevel_2(); break;
+            case 3: tickLevel_3(); break;
+            default:
+                Debug.LogError("level: " + level);
+                break;                
+        }
         
+    }
+    private void LateUpdate()
+    {
+        if (isCameraFollow)
+        {
+            if (Camera.main.transform.position.x < player.transform.position.x + 1)
+            {
+                Camera.main.transform.position = Vector3.Lerp(
+                    Camera.main.transform.position,
+                    new Vector3(
+                        player.transform.position.x + 1,
+                        Camera.main.transform.position.y,
+                        Camera.main.transform.position.z),
+                    Time.deltaTime * 1000);
+            }
+        }
+    }
+
+    void tickLevel_1()
+    {
         Vector2 v = player.GetComponent<Rigidbody2D>().velocity;
-        if(timeCount < 1)
+        if (timeCount < 1)
         {
             player.GetComponent<Rigidbody2D>().velocity = new Vector2(3, v.y);
         }
-        else if(timeCount < 2)
+        else if (timeCount < 2)
         {
             if (jumpFlag[0])
             {
@@ -52,22 +108,43 @@ public class LevelControl_1 : MonoBehaviour
         else if (timeCount < 4)
         {
             float percent = timeCount - 3;
-            mainCamera.transform.position = Vector3.Lerp(new Vector3(0.15f, -0.53f, -10), new Vector3(0.15f, 0.75f, -10), percent);
+            mainCamera.transform.position = Vector3.Lerp(new Vector3(0.15f, -0.8f, -10), new Vector3(0.15f, 0.75f, -10), percent);
+            playerPos = player.transform.position;
         }
         else if (timeCount < 6)
         {
+            playerController.inputFlag = true;
             float percent = (timeCount - 4) / 2;
             mainCamera.transform.position = Vector3.Lerp(new Vector3(0.15f, 0.75f, -10), new Vector3(8.36f, 0.75f, -10), percent);
             car.transform.position = Vector3.Lerp(new Vector3(1.46f, -0.12f, 0), new Vector3(9.67f, -0.12f, 0), percent);
-            player.transform.position = Vector3.Lerp(new Vector3(-0.2611525f, -0.2570573f, 0), new Vector3(7.8488475f, -0.2570573f, 0), percent);
+            //player.transform.position = Vector3.Lerp(new Vector3(-0.2611525f, -0.2570573f, 0), new Vector3(7.9488475f, -0.2570573f, 0), percent);
+            player.transform.position = Vector3.Lerp(playerPos, playerPos + new Vector3(8.21f, 0, 0), percent);
         }
-        else if (timeCount < 100)
+        else if (enemy.GetComponentInChildren<Transform>().childCount != 0)
         {
             playerController.inputFlag = true;
             BGLoop.GetComponent<BackgroundLoop>().setStartLoop(true);
         }
+        else
+        {
+            CancelInvoke("genRandomEnemy");
+
+            boss.transform.position = Vector3.Lerp(boss.transform.position, new Vector3(-3.37f, -1.54f, 0), Time.deltaTime);
+            Destroy(car, 4.5f);
+            Invoke("goToLevel_2", 3);
+        }
 
         checkPlayer();
+    }
+
+    void tickLevel_2()
+    {
+        
+    }
+
+    void tickLevel_3()
+    {
+
     }
 
     void checkPlayer()
@@ -91,5 +168,37 @@ public class LevelControl_1 : MonoBehaviour
         invokeFlag = true;
         player.transform.position = new Vector3(7.8488475f, 1f, 0);
         player.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+    }
+
+    IEnumerator awakeEnemy(GameObject e)
+    {
+        yield return new WaitForSeconds(e.GetComponent<Enemy>().appearTime);
+        e.SetActive(true);
+    }
+
+    void genRandomEnemy()
+    {
+        int num = Random.Range(1, 5);
+        for(int i = 0; i < num; i++)
+        {
+            float pos_x = Random.Range(0.1f, 1.2f);
+            Vector3 pos = Camera.main.ViewportToWorldPoint(new Vector3(pos_x, 1.1f, 10));
+            GameObject.Instantiate(randomEnemy, pos, Quaternion.identity);
+        }
+    }
+
+    void goToLevel_2()
+    {
+        if(bossBomb != null)bossBomb.SetActive(true);
+        BGLoop.GetComponent<BackgroundLoop>().setStartLoop(false);
+        boss.transform.position = Vector3.Lerp(boss.transform.position, new Vector3(3.18f, 0.62f, 0), 2 * Time.deltaTime);
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, new Vector3(mainCamera.transform.position.x, -0.8f, mainCamera.transform.position.y), 2 * Time.deltaTime);
+        level = 2;
+        if (Camera.main.transform.position.y < -0.79f) isCameraFollow = true;
+    }
+    
+    void goToLevel_3()
+    {
+        level = 3;
     }
 }

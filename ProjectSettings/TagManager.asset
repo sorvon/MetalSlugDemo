@@ -8,6 +8,7 @@ TagManager:
   - PlayerGrenade
   - EnemyBullet
   - Enemy
+  - EnemyVehicle
   layers:
   - Default
   - TransparentFX

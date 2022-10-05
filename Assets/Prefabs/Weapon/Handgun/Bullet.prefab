@@ -127,11 +127,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   lifeTime: 3
+  direction: {x: 1, y: 0, z: 0}
   damage: 1
   bulletSprite:
   - {fileID: 21300000, guid: b141f6849ce5113449ddb8280e84850d, type: 3}
   - {fileID: 21300000, guid: d13c264c931c5ab4baaf7a95fb89bbec, type: 3}
   - {fileID: 21300000, guid: de2514d2027dade4faa781f85c029b74, type: 3}
+  isLoop: 0
   fireSprite: {fileID: 6276575603275851145, guid: 24d69eed0da53a64abb6e76c1b9b0633, type: 3}
   endSprite: {fileID: 5192713951418755979, guid: 5280a10fd30cfc349b96070dd1677df6, type: 3}
 --- !u!50 &5733191023694250521

@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
     private bool hitFlag = false;
 
     private float timeCount;
+    private float jumpTimeCount = 0;
     
     private bool isTransparent = false;
     private float additionalTimeCount;
@@ -126,7 +127,12 @@ public class PlayerController : MonoBehaviour
         
         if (Mathf.Abs(v.y) > 0.05)
         {
-            setState(States._jump);
+            jumpTimeCount += Time.deltaTime;
+            if(jumpTimeCount > 0.1)
+            {
+                jumpTimeCount = 0;
+                setState(States._jump);
+            }
         }
         else if(key_s)
         {
@@ -244,7 +250,7 @@ public class PlayerController : MonoBehaviour
                 timeCount = 1;
             }
         }
-        else if(isShoot && hitFlag)
+        else if(isShoot && (hitFlag || hitIndex !=0))
         {
             if (m_state == States._down || m_state == States._down_walk)
             {
@@ -336,6 +342,7 @@ public class PlayerController : MonoBehaviour
     }
     void setState(States value)
     {
+        jumpTimeCount = 0;
         if (m_state != value)
         {
             m_state = value;
@@ -350,7 +357,6 @@ public class PlayerController : MonoBehaviour
     public void playerDead()
     {
         if (invincibleTime > 0) return;
-        Debug.Log("dead");
         GameObject.Instantiate(deadAmime, transform.position, Quaternion.identity);
         Invoke("reborn", 2);
         gameObject.SetActive(false);
@@ -358,9 +364,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("EnemyBullet"))
+        if (collision.CompareTag("EnemyBullet") && GetComponent<BoxCollider2D>().IsTouching(collision))
         {
-            //if (invincibleTime > 0) return;
+            if (invincibleTime > 0) return;
             playerDead();
             Destroy(collision.gameObject);
         }
@@ -368,15 +374,16 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.name == "Enemy")
+        if(collision.CompareTag("Enemy"))
         {
+            if(hitIndex == 1) collision.GetComponent<Enemy>().life -= 1;
             hitFlag = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.name == "Enemy")
+        if (collision.CompareTag("Enemy"))
         {
             hitFlag = false;
         }

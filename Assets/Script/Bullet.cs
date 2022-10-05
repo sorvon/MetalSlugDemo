@@ -6,13 +6,16 @@ public class Bullet : MonoBehaviour
 {
     public float speed = 5.0f;
     public float lifeTime = 3.0f;
+    public Vector3 direction = Vector3.right;
     public int damage = 1;
     public Sprite[] bulletSprite;
     public bool isLoop = false;
+
     
     private float bulletInterval = 1.0f / 20;
     private int bulletIndex = 0;
     private float timeCount = 0;
+    private float lifeTimeCount = 0;
 
     public GameObject fireSprite;
     public GameObject endSprite;
@@ -20,18 +23,26 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fireSpriteTmp = GameObject.Instantiate(fireSprite, transform.position, transform.rotation);
-        Destroy(gameObject, lifeTime);
+        if(fireSprite != null)
+            fireSpriteTmp = GameObject.Instantiate(fireSprite, transform.position, transform.rotation);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!fireSpriteTmp)
+        lifeTimeCount += Time.deltaTime;
+        if(lifeTimeCount > lifeTime)
         {
+            Destroy(gameObject);
+        }
+        if (GetComponent<SpriteRenderer>() == null) return;
+        if (!fireSpriteTmp && GetComponent<SpriteRenderer>() != null)
+        {
+            
             timeCount += Time.deltaTime;
             GetComponent<SpriteRenderer>().sprite = bulletSprite[bulletIndex];
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
+            transform.Translate(direction * speed * Time.deltaTime);
             if (timeCount > bulletInterval)
             {
                 timeCount = 0;
@@ -39,7 +50,6 @@ public class Bullet : MonoBehaviour
                 else if (isLoop) bulletIndex = 0;
 
             }
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
         else
         {
