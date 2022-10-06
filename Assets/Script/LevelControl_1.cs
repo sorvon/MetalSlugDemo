@@ -8,37 +8,47 @@ public class LevelControl_1 : MonoBehaviour
     public GameObject car;
     public GameObject player;
     public Camera mainCamera;
+    public GameObject lifeUi;
+    public GameObject grenadeUi;
+    public GameObject scoreUi;
+    public GameObject stopUi;
+    public GameObject failedUi;
+    public GameObject completeUi;
     public GameObject BGLoop;
-    public int life = 10;
     public GameObject enemy;
     public GameObject randomEnemy;
     public GameObject boss;
     public GameObject bossBomb;
-
+    public bool skipLevel_1 = false;
+    
     private PlayerController playerController;
     private float timeCount = 0;
     private bool[] jumpFlag = { true, true };
     private bool invokeFlag = true;
     private bool isStop = false;
     private int level = 1;
+    
     private Vector3 playerPos;
     private bool isCameraFollow = false;
     // Start is called before the first frame update
     void Start()
     {
         Transform enemyList = enemy.GetComponentInChildren<Transform>();
+        playerController = player.GetComponent<PlayerController>();
+        playerController.inputFlag = false;
+        playerController.life = PlayerPrefs.GetInt("life");
+        playerController.grenadeNum = PlayerPrefs.GetInt("grenade");
+        playerController.score = 0;
         foreach (Transform enemy in enemyList)
         {
             enemy.gameObject.SetActive(false);
             enemy.gameObject.GetComponent<Enemy>().player = player;
-            if (level == 1) StartCoroutine(awakeEnemy(enemy.gameObject));
+            if (! skipLevel_1) StartCoroutine(awakeEnemy(enemy.gameObject));
         }
-        if (level == 1)
+        if (! skipLevel_1)
         {
             randomEnemy.GetComponent<Enemy>().player = player;
             InvokeRepeating("genRandomEnemy", 6, 5);
-            playerController = player.GetComponent<PlayerController>();
-            playerController.inputFlag = false;
         }
         
     }
@@ -49,7 +59,7 @@ public class LevelControl_1 : MonoBehaviour
         if (Input.GetKeyDown("space"))
         {
             isStop = !isStop;
-            Debug.Log(isStop);
+            stopUi.SetActive(isStop);
             if (isStop) Time.timeScale = 0;
             else Time.timeScale = 1;
         }
@@ -67,9 +77,27 @@ public class LevelControl_1 : MonoBehaviour
     }
     private void LateUpdate()
     {
+        if(playerController.life < 0)
+        {
+            failedUi.SetActive(true);
+            return;
+        }
+        grenadeUi.GetComponent<NumberSprite>().num = playerController.grenadeNum;
+        lifeUi.GetComponent<NumberSprite>().num = playerController.life;
+        scoreUi.GetComponent<NumberSprite>().num = playerController.score;
         if (isCameraFollow)
         {
-            if (Camera.main.transform.position.x < player.transform.position.x + 1)
+            if (Camera.main.transform.position.x < player.transform.position.x + 0.8)
+            {
+                Camera.main.transform.position = Vector3.Lerp(
+                    Camera.main.transform.position,
+                    new Vector3(
+                        player.transform.position.x + 1,
+                        Camera.main.transform.position.y,
+                        Camera.main.transform.position.z),
+                    Time.deltaTime * 30);
+            }
+            else if (Camera.main.transform.position.x < player.transform.position.x + 1)
             {
                 Camera.main.transform.position = Vector3.Lerp(
                     Camera.main.transform.position,
@@ -78,6 +106,14 @@ public class LevelControl_1 : MonoBehaviour
                         Camera.main.transform.position.y,
                         Camera.main.transform.position.z),
                     Time.deltaTime * 1000);
+            }
+        }
+        else
+        {
+            Vector3 viewPlayerPos = Camera.main.WorldToViewportPoint(player.transform.position);
+            if (viewPlayerPos.x > 1.0f)
+            {
+                player.transform.position = Camera.main.ViewportToWorldPoint(new Vector3(1.0f, viewPlayerPos.y, viewPlayerPos.z));
             }
         }
     }
@@ -120,7 +156,7 @@ public class LevelControl_1 : MonoBehaviour
             //player.transform.position = Vector3.Lerp(new Vector3(-0.2611525f, -0.2570573f, 0), new Vector3(7.9488475f, -0.2570573f, 0), percent);
             player.transform.position = Vector3.Lerp(playerPos, playerPos + new Vector3(8.21f, 0, 0), percent);
         }
-        else if (enemy.GetComponentInChildren<Transform>().childCount != 0)
+        else if (enemy.GetComponentInChildren<Transform>().childCount != 0 && !skipLevel_1)
         {
             playerController.inputFlag = true;
             BGLoop.GetComponent<BackgroundLoop>().setStartLoop(true);
@@ -155,7 +191,7 @@ public class LevelControl_1 : MonoBehaviour
         {
             if (invokeFlag)
             {
-                life--;
+                playerController.life--;
                 invokeFlag = false;
                 Invoke("resetPlayer", 1);
             }
@@ -192,7 +228,7 @@ public class LevelControl_1 : MonoBehaviour
         if(bossBomb != null)bossBomb.SetActive(true);
         BGLoop.GetComponent<BackgroundLoop>().setStartLoop(false);
         boss.transform.position = Vector3.Lerp(boss.transform.position, new Vector3(3.18f, 0.62f, 0), 2 * Time.deltaTime);
-        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, new Vector3(mainCamera.transform.position.x, -0.8f, mainCamera.transform.position.y), 2 * Time.deltaTime);
+        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, new Vector3(mainCamera.transform.position.x, -0.8f, mainCamera.transform.position.z), 2 * Time.deltaTime);
         level = 2;
         if (Camera.main.transform.position.y < -0.79f) isCameraFollow = true;
     }

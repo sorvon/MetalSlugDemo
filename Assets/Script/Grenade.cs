@@ -25,6 +25,7 @@ public class Grenade : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (!gameObject.scene.isLoaded) return;
         GameObject.Instantiate(bombSprite, transform.position, Quaternion.identity);
     }
 }

@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
     public float speed = 1.0f;
     public float jumpSpeed = 3.0f;
     public float invincibleTime = 3;
+    public int life = 10;
+    public int grenadeNum = 10;
+    public int score = 0;
     public SpriteRenderer upRender;
     public SpriteRenderer downRender;
     public Sprite[] idleLoopSpriteUp;
@@ -31,8 +34,13 @@ public class PlayerController : MonoBehaviour
     public GameObject normalShootPos;
     public GameObject upShootPos;
     public GameObject downShootPos;
+    public GameObject uiPos;
     public GameObject deadAmime;
+    public GameObject uiHit;
+    public GameObject reward500;
+    public GameObject reward1000;
     public bool inputFlag = true;
+
 
     private bool lookUp = false;
     private bool isShoot = false;
@@ -110,10 +118,12 @@ public class PlayerController : MonoBehaviour
         if (v.x < 0)
         {
             transform.transform.localScale = new Vector3(1, 1, 1);
+            uiPos.transform.localScale = new Vector3(1, 1, 1);
         }
         else if (v.x > 0)
         {
             transform.transform.localScale = new Vector3(-1, 1, 1);
+            uiPos.transform.localScale = new Vector3(-1, 1, 1);
         }
         else
         {
@@ -235,10 +245,14 @@ public class PlayerController : MonoBehaviour
 
             if (throwIndex == 1)
             {
-                GameObject tmp =  GameObject.Instantiate(grenade, pos, Quaternion.Euler(0, 0, 0));
-                if(transform.localScale.x == 1)
+                if(grenadeNum > 0)
                 {
-                    tmp.GetComponent<Grenade>().speed.x *= -1;
+                    grenadeNum--;
+                    GameObject tmp = GameObject.Instantiate(grenade, pos, Quaternion.Euler(0, 0, 0));
+                    if (transform.localScale.x == 1)
+                    {
+                        tmp.GetComponent<Grenade>().speed.x *= -1;
+                    }
                 }
             }
             throwIndex++;
@@ -265,7 +279,7 @@ public class PlayerController : MonoBehaviour
 
             if (hitIndex == 1)
             {
-                //GameObject.Instantiate(handgunBullet, pos, Quaternion.Euler(0, 0, z_rotation));
+                GameObject.Instantiate(uiHit, uiPos.transform);
             }
             hitIndex++;
 
@@ -324,6 +338,7 @@ public class PlayerController : MonoBehaviour
             lookUpIndex++;
             if (lookUpIndex >= upLoopSpriteUp.Length) lookUpIndex = 1;
         }
+
     }
 
     void setPositton()
@@ -357,18 +372,38 @@ public class PlayerController : MonoBehaviour
     public void playerDead()
     {
         if (invincibleTime > 0) return;
+        life--;
         GameObject.Instantiate(deadAmime, transform.position, Quaternion.identity);
         Invoke("reborn", 2);
         gameObject.SetActive(false);
     }
 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Reward"))
+        {
+            GameObject tmp = GameObject.Instantiate(reward500, uiPos.transform);
+            score += 500;
+            Destroy(tmp, 2);
+            Destroy(collision.collider.gameObject);
+        }
+        //else if (collision.collider.CompareTag("EnemyBullet"))
+        //{
+        //    playerDead();
+        //    Destroy(collision.collider.gameObject);
+        //}
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("EnemyBullet") && GetComponent<BoxCollider2D>().IsTouching(collision))
+        if (GetComponent<BoxCollider2D>().IsTouching(collision))
         {
-            if (invincibleTime > 0) return;
-            playerDead();
-            Destroy(collision.gameObject);
+            if (collision.CompareTag("EnemyBullet"))
+            {
+                if (invincibleTime > 0) return;
+                playerDead();
+                Destroy(collision.gameObject);
+            }
         }
     }
 
@@ -376,7 +411,11 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.CompareTag("Enemy"))
         {
-            if(hitIndex == 1) collision.GetComponent<Enemy>().life -= 1;
+            if (hitIndex == 1) 
+            {
+                score += 100;
+                collision.GetComponent<Enemy>().life -= 1;
+            } 
             hitFlag = true;
         }
     }

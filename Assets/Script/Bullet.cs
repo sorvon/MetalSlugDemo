@@ -61,6 +61,7 @@ public class Bullet : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (!gameObject.scene.isLoaded) return;
         GameObject.Instantiate(endSprite, transform.position, transform.rotation);
     }
 }

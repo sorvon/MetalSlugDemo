@@ -62,6 +62,6 @@ public class EnemyParaboy : Enemy
                 GameObject.Instantiate(bullet, pos, Quaternion.FromToRotation(Vector3.right, player.transform.position - pos));
             }
         }
-        
     }
+
 }

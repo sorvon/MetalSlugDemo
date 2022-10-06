@@ -143,7 +143,7 @@ public class CarGun : MonoBehaviour
 
     private void OnDestroy()
     {
-        player.SetActive(true);
+        if(player) player.SetActive(true);
     }
 
     void setTransparent()
