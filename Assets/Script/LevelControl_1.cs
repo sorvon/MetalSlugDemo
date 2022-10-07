@@ -129,6 +129,14 @@ public class LevelControl_1 : MonoBehaviour
         }
         else if (timeCount < 2)
         {
+            if(player.transform.position.x < -0.67f)
+            {
+                player.transform.position = new Vector3(-0.67f, player.transform.position.y, player.transform.position.z);
+            }
+            else if(player.transform.position.x > 0.94f)
+            {
+                player.transform.position = new Vector3(0.94f, player.transform.position.y, player.transform.position.z);
+            }
             if (jumpFlag[0])
             {
                 player.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 5);
