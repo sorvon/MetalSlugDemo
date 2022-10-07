@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3770565053591903084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.39, y: 0.61, z: 0}
+  m_LocalPosition: {x: -0.6, y: 0.61, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -377,6 +377,9 @@ MonoBehaviour:
   speed: 3
   jumpSpeed: 4
   invincibleTime: 3
+  life: 9
+  grenadeNum: 10
+  score: 0
   upRender: {fileID: 5823964074015817313}
   downRender: {fileID: 5823964073178888645}
   idleLoopSpriteUp:
@@ -489,8 +492,11 @@ MonoBehaviour:
   normalShootPos: {fileID: 5823964072797366762}
   upShootPos: {fileID: 5823964072160956982}
   downShootPos: {fileID: 5823964072940767850}
+  uiPos: {fileID: 3770565053591903084}
   deadAmime: {fileID: 1311054294513181292, guid: 5f9e921344f686c4ebc10db0286a807f, type: 3}
-  UiHit: {fileID: 4349571674224365806, guid: 31a5692eb9b09e8488bdfe353ac54f2a, type: 3}
+  uiHit: {fileID: 4349571674224365806, guid: 31a5692eb9b09e8488bdfe353ac54f2a, type: 3}
+  reward500: {fileID: 4393788602793376182, guid: b94de8cc98ef40e4683b32fa881e769e, type: 3}
+  reward1000: {fileID: 1241172980046806158, guid: e133eed94a0034b46a0f212ed408903f, type: 3}
   inputFlag: 1
 --- !u!1 &5823964073178888647
 GameObject:

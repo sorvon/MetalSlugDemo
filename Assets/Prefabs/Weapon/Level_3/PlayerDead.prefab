@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1895767027835332434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1375839413847003336}
+  - component: {fileID: 2920637157604818225}
+  - component: {fileID: 7266945254604472118}
+  m_Layer: 0
+  m_Name: PlayerDead
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1375839413847003336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895767027835332434}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &2920637157604818225
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895767027835332434}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 95
+  m_Sprite: {fileID: 21300000, guid: a930ec471bf728a4cb30fc0e3065457d, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.03, y: 0.98}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &7266945254604472118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895767027835332434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02b27fea0d756714080582206776dde9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite:
+  - {fileID: 21300000, guid: a930ec471bf728a4cb30fc0e3065457d, type: 3}
+  - {fileID: 21300000, guid: 5fbed9f0efb0ba34183c31b4690c41fb, type: 3}
+  - {fileID: 21300000, guid: 32a82bd2f3239704bbdb3cde440c573a, type: 3}
+  - {fileID: 21300000, guid: 55426b6b5c9de1d47b0ad18f3ed5e0dc, type: 3}
+  - {fileID: 21300000, guid: aecdbacc192f0d34da9f5e9486a9c838, type: 3}
+  - {fileID: 21300000, guid: 1194e49e03aa86f4780faac9024c641e, type: 3}
+  - {fileID: 21300000, guid: 47d955bf8fa4aff4b96159d9dce234be, type: 3}
+  - {fileID: 21300000, guid: 6c4269ad03fef6a4e98c61d4d2895136, type: 3}
+  - {fileID: 21300000, guid: 6397ce2f9e9d8fa4bb9937ff71250c40, type: 3}
+  - {fileID: 21300000, guid: 6ac4721c14f0c194fb3438b9933267fd, type: 3}
+  - {fileID: 21300000, guid: be2f38a36436c9b4abf254cd49740348, type: 3}
+  - {fileID: 21300000, guid: f14ca4abc961f754d87b02d34ed5e323, type: 3}
+  - {fileID: 21300000, guid: 88573de89c9deeb4796bfd2e14d3fec3, type: 3}
+  - {fileID: 21300000, guid: 8d1b88d532f62eb4bada778f504ad5a9, type: 3}
+  - {fileID: 21300000, guid: 572b60a8f6f3b924899c10e6d6cfe58a, type: 3}
+  - {fileID: 21300000, guid: 8b6bec3028ab30e46afac3f9a5364275, type: 3}
+  spriteInterval: 0.05

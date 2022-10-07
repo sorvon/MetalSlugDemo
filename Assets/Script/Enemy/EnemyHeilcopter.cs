@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class EnemyHeilcopter : Enemy
 {
+    private GameObject gameController;
     private float timeCountMove = 0;
     private float timeCountAttact = 0;
     private bool toRight = true;
@@ -14,6 +16,7 @@ public class EnemyHeilcopter : Enemy
     protected override void Start()
     {
         base.Start();
+        gameController = GameObject.FindWithTag("GameController");
     }
 
     // Update is called once per frame
@@ -24,8 +27,10 @@ public class EnemyHeilcopter : Enemy
         timeCountAttact += Time.deltaTime;
         Vector3 left = Camera.main.ViewportToWorldPoint(new Vector3(0.1f, 0.9f, 10));
         Vector3 right = Camera.main.ViewportToWorldPoint(new Vector3(0.9f, 0.9f, 10));
+        gameController.GetComponent<LevelControl_1>().setCameraFollow(false);
         if (toInit)
         {
+            
             transform.position = Vector3.Lerp(transform.position, left, 2 * Time.deltaTime);
             if (timeCountMove > 2)
             {
@@ -58,6 +63,13 @@ public class EnemyHeilcopter : Enemy
             Invoke("shoot", 0.5f);
             Invoke("shoot", 1f);
         }
+    }
+
+    protected override void OnDestroy()
+    {
+        if (!gameObject.scene.isLoaded) return;
+        base.OnDestroy();
+        gameController.GetComponent<LevelControl_1>().setCameraFollow(true);
     }
 
     void shoot()

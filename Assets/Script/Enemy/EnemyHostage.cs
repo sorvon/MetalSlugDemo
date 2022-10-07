@@ -23,6 +23,11 @@ public class EnemyHostage : Enemy
                 GetComponent<Rigidbody2D>().velocity = new Vector2(-0.5f, 0);
             if (isLeft) Invoke("toRightInvoke", 1f);
             else Invoke("toLeftInvoke", 1f);
+            Destroy(gameObject, 20);
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Free"))
+        {
+            gameObject.tag = "Hostage";
         }
         else if(animator.GetCurrentAnimatorStateInfo(0).IsName("Disappear"))
         {
@@ -38,11 +43,21 @@ public class EnemyHostage : Enemy
 
     protected override void OnTriggerEnter2D(Collider2D other)
     {
-        base.OnTriggerEnter2D(other);
+        Animator animator = GetComponent<Animator>();
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Cry")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("Idle 0")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("Shout"))
+        {
+            base.OnTriggerEnter2D(other);
+        }
+    }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        Animator animator = GetComponent<Animator>();
         if (other.gameObject.CompareTag("Player"))
         {
-            Animator animator = GetComponent<Animator>();
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunLoopanim"))
             {
                 if (!isReward)
@@ -51,7 +66,7 @@ public class EnemyHostage : Enemy
                     GameObject.Instantiate(rewardDrop, transform.position, Quaternion.identity);
                 }
                 animator.SetTrigger("PlayerTrigger");
-            } 
+            }
         }
     }
 

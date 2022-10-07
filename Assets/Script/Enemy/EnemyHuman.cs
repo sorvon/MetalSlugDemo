@@ -7,7 +7,10 @@ public class EnemyHuman : Enemy
 {
     public GameObject shootPos;
     public GameObject downTrigger;
+    public GameObject standBox;
+    public GameObject downBox;
     private float timeCountAttact = 0;
+
 
     // Start is called before the first frame update
     protected override void Start()
@@ -23,12 +26,14 @@ public class EnemyHuman : Enemy
         Animator animator = GetComponent<Animator>();
         float distance = transform.position.x - player.transform.position.x;
         animator.SetFloat("distance", distance);
-        GetComponent<BoxCollider2D>().enabled = true;
-        
+        GetComponent<BoxCollider2D>().offset = standBox.GetComponent<BoxCollider2D>().offset;
+        GetComponent<BoxCollider2D>().size = standBox.GetComponent<BoxCollider2D>().size;
         GetComponent<Rigidbody2D>().velocity = new Vector3(0, 0);
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("DownAttack"))
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("DownAttack")
+            || animator.GetCurrentAnimatorStateInfo(0).IsName("Down"))
         {
-            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<BoxCollider2D>().offset = downBox.GetComponent<BoxCollider2D>().offset;
+            GetComponent<BoxCollider2D>().size = downBox.GetComponent<BoxCollider2D>().size;
         }
         else if (animator.GetCurrentAnimatorStateInfo(0).IsName("WalkLoop"))
         {
@@ -45,8 +50,8 @@ public class EnemyHuman : Enemy
         }
         if (timeCountAttact > attackInterval)
         {
-            animator.SetTrigger("attack");
             timeCountAttact = 0;
+            animator.SetTrigger("attack");
         }
     }
 

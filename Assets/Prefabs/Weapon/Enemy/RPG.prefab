@@ -101,7 +101,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 36
+  m_SortingOrder: 111
   m_Sprite: {fileID: 21300000, guid: 031a28faeb7be1d408af2d72fcf57f5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
-  lifeTime: 3
+  lifeTime: 9
   direction: {x: 1, y: 0, z: 0}
   damage: 1
   bulletSprite:

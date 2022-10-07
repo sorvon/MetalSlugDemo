@@ -204,7 +204,6 @@ public class PlayerController : MonoBehaviour
                 upRender.sprite = downLoopSpriteUp[downLoopIndex];
                 downRender.sprite = downLoopSpriteDown[0];
                 downLoopIndex++;
-                Debug.Log(downLoopIndex);
                 downLoopIndex %= downLoopSpriteUp.Length;
                 break;
 
@@ -214,7 +213,6 @@ public class PlayerController : MonoBehaviour
                 upRender.sprite = downLoopSpriteUp[downLoopIndex];
                 downRender.sprite = downLoopSpriteDown[downLoopIndex];
                 downLoopIndex++;
-                Debug.Log(downLoopIndex);
                 downLoopIndex %= downLoopSpriteUp.Length;
                 break;
 
@@ -345,7 +343,7 @@ public class PlayerController : MonoBehaviour
     {
         switch (m_state)
         {
-            case States._down:
+            case States._down: case States._down_walk:
                 GetComponent<BoxCollider2D>().offset = new Vector2(-0.06f, 0.08f);
                 GetComponent<BoxCollider2D>().size = new Vector2(0.38f, 0.45f);
                 break;
@@ -422,7 +420,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag("Enemy") || collision.CompareTag("Hostage"))
         {
             hitFlag = false;
         }

@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - EnemyVehicle
   - Reward
+  - Hostage
   layers:
   - Default
   - TransparentFX

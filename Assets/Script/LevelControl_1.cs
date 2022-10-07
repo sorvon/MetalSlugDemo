@@ -85,6 +85,7 @@ public class LevelControl_1 : MonoBehaviour
         grenadeUi.GetComponent<NumberSprite>().num = playerController.grenadeNum;
         lifeUi.GetComponent<NumberSprite>().num = playerController.life;
         scoreUi.GetComponent<NumberSprite>().num = playerController.score;
+        if(level == 1) isCameraFollow = false;
         if (isCameraFollow)
         {
             if (Camera.main.transform.position.x < player.transform.position.x + 0.8)
@@ -120,6 +121,7 @@ public class LevelControl_1 : MonoBehaviour
 
     void tickLevel_1()
     {
+        
         Vector2 v = player.GetComponent<Rigidbody2D>().velocity;
         if (timeCount < 1)
         {
@@ -233,8 +235,9 @@ public class LevelControl_1 : MonoBehaviour
         if (Camera.main.transform.position.y < -0.79f) isCameraFollow = true;
     }
     
-    void goToLevel_3()
+
+    public void setCameraFollow(bool value)
     {
-        level = 3;
+        isCameraFollow = value;
     }
 }

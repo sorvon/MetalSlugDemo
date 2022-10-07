@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        attackInterval = Random.Range(attackIntervalMin, attackIntervalMax);
         if (player == null) player = GameObject.FindWithTag("Player");
         if (life <= 0)
         {
@@ -37,7 +38,7 @@ public class Enemy : MonoBehaviour
             return;
         }
     }
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         if (!gameObject.scene.isLoaded) return;
         if (deadAnime != null)

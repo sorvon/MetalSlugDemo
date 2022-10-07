@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  lifeTime: 3
+  lifeTime: 1
   direction: {x: 1, y: 0, z: 0}
   damage: 1
   bulletSprite:
