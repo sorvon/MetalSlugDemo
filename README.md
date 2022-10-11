@@ -1,3 +1,5 @@
+# 成果
+【自制合金弹头通关流程】 https://www.bilibili.com/video/BV1UG4y1H7HC?share_source=copy_web&vd_source=ed507b5a6cba3e0380b9f21aaa0b0250
 # memo2022 秋招实习10.01~10.07
 ## 10.01
 - 确定画面比例
